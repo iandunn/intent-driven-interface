@@ -51,17 +51,7 @@ export async function fetchContentIndex( pluginVersion, userDbVersion, apiRootUr
 	 */
 	await cacheIndex( cacheName, url, response.clone() );
 
-	// "Note that an HTTP error response (e.g., 404) will not trigger an exception. It will return a normal response object that has the appropriate error code."
-		// um, but it does trigger an exception... ?
-
 	return [ ...await response.json() ];
-
-	/*
-	test updates to cache on server side get pulled in immediately. need to have a version of the db for each user, and add that as url cachebuster?
-		or etags?
-			// " The caching API doesn't honor HTTP caching headers."
-	if use cachebuster, would want to remove the other versno from cache
-	*/
 }
 
 /**
@@ -140,11 +130,6 @@ async function cacheIndex( cacheName, url, response ) {
 	 * `fetch()`. See notes in `fetchContentIndex()`.
 	 */
 	qniCache.put( url, response );
-
-	// cache.add() does't store non-200 responses, but cache.put does, so have to validate
-	// don't wanna store a 500 error
-	// also wanna make sure that the json body is valid b/c don't wanna store an application-level error message
-	// caller has a try/catch and some error handling, should probably move that down here and then avoid caching errors
 
 	await deleteOldCaches( cacheName );
 }

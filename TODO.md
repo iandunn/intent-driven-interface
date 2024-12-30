@@ -13,10 +13,21 @@
 update youtube video - have nicer mic now too. maybe do a quick "hi i'm ian, built this because..." but 5 seconds max, then get to the point.
 set video poster to be the interface not your face.
 
+* fetchContentIndex() :: await cacheIndix
+	"Note that an HTTP error response (e.g., 404) will not trigger an exception. It will return a normal response object that has the appropriate error code."
+	but it does trigger an exception... ?
 
+* fetchContentIndex() :: return await
+	test updates to cache on server side get pulled in immediately. need to have a version of the db for each user, and add that as url cachebuster?
+	or etags?
+	" The caching API doesn't honor HTTP caching headers."
+	if use cachebuster, would want to remove the other version from cache
 
-
-
+* cacheIndex() qniCache.put()
+	cache.add() does't store non-200 responses, but cache.put does, so have to validate
+	don't wanna store a 500 error
+	also wanna make sure that the json body is valid b/c don't wanna store an application-level error message
+	caller has a try/catch and some error handling, should probably move that down here and then avoid caching errors
 
 ### Next minor version
 
